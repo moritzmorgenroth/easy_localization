@@ -344,7 +344,60 @@ testWidgets(
     },
   );
 
+testWidgets(
+    "[EasyLocalization] _getFallbackLocale() fallbackLocale!=null test",
+    (WidgetTester tester) async {
+      await tester.runAsync(() async {
+        await tester.pumpWidget(EasyLocalization(
+          child: MyApp(),
+          path: "i18n",
+          saveLocale: false,
+          useOnlyLangCode: true,
+          fallbackLocale:Locale("ar") ,
+          supportedLocales: [Locale("ar") ],
+        ));
+        await tester.idle();
+        // The async delegator load will require build on the next frame. Thus, pump
+        await tester.pumpAndSettle();
 
+        expect(EasyLocalization.of(_context).supportedLocales,[Locale("ar")]);
+        expect(EasyLocalization.of(_context).locale,Locale("ar"));
+        expect(EasyLocalization.of(_context).fallbackLocale,Locale("ar"));
+
+        expect(Intl.defaultLocale, Locale("ar").toString());
+        expect(Intl.defaultLocale, EasyLocalization.of(_context).locale.toString());
+
+      });
+    },
+  );
+
+
+testWidgets(
+    "[EasyLocalization] _getFallbackLocale()  fallbackLocale==null test",
+    (WidgetTester tester) async {
+      await tester.runAsync(() async {
+        await tester.pumpWidget(EasyLocalization(
+          child: MyApp(),
+          path: "i18n",
+          saveLocale: false,
+          useOnlyLangCode: true,
+          // fallbackLocale:Locale("en") ,
+          supportedLocales: [Locale("ar") ],// Locale("en", "US"), Locale("ar","DZ")
+        ));
+        await tester.idle();
+        // The async delegator load will require build on the next frame. Thus, pump
+        await tester.pumpAndSettle();
+
+        expect(EasyLocalization.of(_context).supportedLocales,[Locale("ar")]);
+        expect(EasyLocalization.of(_context).locale,Locale("ar"));
+        expect(EasyLocalization.of(_context).fallbackLocale,null);
+
+        expect(Intl.defaultLocale, Locale("ar").toString());
+        expect(Intl.defaultLocale, EasyLocalization.of(_context).locale.toString());
+
+      });
+    },
+  );
 
 
 
